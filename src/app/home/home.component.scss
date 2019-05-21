@@ -1,0 +1,39 @@
+.orange {
+	background-color: rgb(255, 202, 103);
+}
+
+.teal {
+	background-color: rgb(111, 214, 255);
+}
+
+.red {
+	background-color: rgb(247, 118, 118);
+}
+
+.round {
+	border-radius: 0px;
+}
+
+.section-hover:hover {
+	opacity: 0.8;
+	cursor: pointer;
+}
+
+.canada {
+	background-image: url('../../assets/canada.jpg');
+	background-position: right;
+}
+
+.white {
+	color: white;
+}
+
+@keyframes move {
+	from {
+		background-color: red;
+	}
+	to {
+		background-color: blue;
+		transform: translateX(100px);
+	}
+}

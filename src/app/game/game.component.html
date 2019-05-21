@@ -1,0 +1,28 @@
+<section>
+  <header>
+    <h4>Clicky Game!</h4>
+  </header>
+  <p>Click on the objects before they reach the end!</p>
+
+</section>
+
+<div class='row justify-content-center'>
+  <div class='col-sm-6 border'>
+    <p inViewport (inViewportAction)="showElement($event)">nevermind no game</p>
+    <p>Lets play with animation</p>
+    <h3>Walk the monster</h3>
+    <div>
+      <button class='p-2' (click)='walk("slow")' [disabled]="inProgress">Slow</button>
+      <button class='p-2' (click)='walk("normal")' [disabled]="inProgress">Normal</button>
+      <button class='p-2' (click)='walk("fast")' [disabled]="inProgress">Fast</button>
+    </div>
+
+    <section>
+        <img class='test' [@walk]='speed' (@walk.start)='beginWalk()' (@walk.done) ='restartState($event)'src="../../assets/green.jpg" alt="green monster">
+        <p *ngIf='inProgress'>Walking in Progress...</p>
+    </section>
+    <section style='height:2000px;'>
+
+    </section>
+  </div>
+</div>
