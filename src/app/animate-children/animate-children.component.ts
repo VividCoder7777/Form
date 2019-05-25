@@ -10,7 +10,7 @@ import { trigger, style, animate, state, transition, keyframes } from '@angular/
 		trigger('fadeIn', [
 			state('true', style({ opacity: '1' })),
 			state('false', style({ opacity: '0' })),
-			transition('* => true', [ animate(450) ])
+			transition('* => true', [ animate(1000) ])
 		])
 	]
 })

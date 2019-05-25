@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Inject } from '@angular/core';
 
 @Component({
 	selector: 'app-canvas',
@@ -20,11 +22,13 @@ export class CanvasComponent implements OnInit {
 	paddleWidth: number;
 	paddleX: number;
 
-	constructor() {}
+	// storing state of keypresses
+	leftPressed = false;
+	rightPressed = false;
+
+	constructor(@Inject(DOCUMENT) private document: Document) {}
 
 	ngOnInit() {
-		console.log(this.canvas);
-
 		this.x = this.canvas.nativeElement.width / 2;
 		this.y = this.canvas.nativeElement.height - 30;
 
@@ -38,9 +42,22 @@ export class CanvasComponent implements OnInit {
 
 		this.ctx = this.canvas.nativeElement.getContext('2d');
 		this.draw.bind(this);
+
+		
+		this.document.addEventListener('keyup', this.onKeyPressUp, false);
+		this.document.addEventListener('keydown', this.onKeyPressDown, false);
+		// call the draw method every 10ms this means 1000/10 = 100 frames
 		setInterval(() => {
 			this.draw();
 		}, 10);
+	}
+
+	onKeyPressUp(event){
+		console.log('key press up');
+	}
+
+	onKeyPressDown(event){
+		console.log('key down', event);
 	}
 
 	draw() {
@@ -68,6 +85,14 @@ export class CanvasComponent implements OnInit {
 		this.ctx.beginPath();
 		this.ctx.arc(this.x, this.y, this.ballRadius, 0, Math.PI * 2, false);
 		this.ctx.fillStyle = 'green';
+		this.ctx.fill();
+		this.ctx.closePath();
+	}
+
+	drawPaddle() {
+		this.ctx.beginPath();
+		this.ctx.rect(this.paddleX, this.canvasElement.height-this.paddleHeight, this.paddleWidth, this.paddleHeight);
+		this.ctx.fillStyle = "#0095DD";
 		this.ctx.fill();
 		this.ctx.closePath();
 	}

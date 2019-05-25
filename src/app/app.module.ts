@@ -8,7 +8,6 @@ import { HomeComponent } from './home/home.component';
 import { FormComponent } from './form/form.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GameComponent } from './game/game.component';
-import { AppearOnScrollDirective } from './directives/appear-on-scroll.directive';
 import { InViewportModule } from 'ng-in-viewport';
 import { AnimateChildrenComponent } from './animate-children/animate-children.component';
 import { GalleryComponent } from './gallery/gallery.component';
@@ -22,7 +21,6 @@ import { PaddleComponent } from './paddle/paddle.component';
 		HomeComponent,
 		FormComponent,
 		GameComponent,
-		AppearOnScrollDirective,
 		AnimateChildrenComponent,
 		GalleryComponent,
 		CanvasComponent,
