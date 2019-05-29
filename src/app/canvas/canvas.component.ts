@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
+import Brick from './brick';
 
 @Component({
 	selector: 'app-canvas',
@@ -16,6 +17,8 @@ export class CanvasComponent implements OnInit {
 	dy: number;
 	dx: number;
 	ballRadius = 10;
+	bricks: Brick;
+	speedOfBall = 4;
 
 	// for the paddle
 	paddleHeight: number;
@@ -26,14 +29,21 @@ export class CanvasComponent implements OnInit {
 	leftPressed = false;
 	rightPressed = false;
 
+	// score
+	score = 0;
+
+	// the interval
+	gameLoop;
+	gameOver = false;
+
 	constructor(@Inject(DOCUMENT) private document: Document) {}
 
 	ngOnInit() {
 		this.x = this.canvas.nativeElement.width / 2;
 		this.y = this.canvas.nativeElement.height - 30;
 
-		this.dy = -2;
-		this.dx = 2;
+		this.dy = -this.speedOfBall;
+		this.dx = this.speedOfBall;
 
 		// define paddle
 		this.paddleHeight = 10;
@@ -43,28 +53,58 @@ export class CanvasComponent implements OnInit {
 		this.ctx = this.canvas.nativeElement.getContext('2d');
 		this.draw.bind(this);
 
+		// listeners for movement
+		this.document.addEventListener('keyup', this.onKeyPressUp.bind(this), false);
+		this.document.addEventListener('keydown', this.onKeyPressDown.bind(this), false);
 		
-		this.document.addEventListener('keyup', this.onKeyPressUp, false);
-		this.document.addEventListener('keydown', this.onKeyPressDown, false);
+		// Bricks
+		this.bricks = new Brick(this.ctx);
+		
 		// call the draw method every 10ms this means 1000/10 = 100 frames
-		setInterval(() => {
+		this.gameLoop = this.startGame();
+	}
+
+	startGame(){
+		this.x = (Math.random() * this.canvasElement.width) + 1;
+		this.y = (Math.random() * 100) + 20;
+		this.score = 0;
+
+		return setInterval(() => {
 			this.draw();
+
 		}, 10);
 	}
 
-	onKeyPressUp(event){
-		console.log('key press up');
+	onKeyPressUp(e){
+
+		if(e.key == "Right" || e.key == "ArrowRight") {
+			this.rightPressed = false;
+		}
+		else if (e.key == "Left" || e.key == "ArrowLeft") {
+			this.leftPressed = false;
+		}
 	}
 
-	onKeyPressDown(event){
-		console.log('key down', event);
+	onKeyPressDown(e){
+
+		if(e.key == "Right" || e.key == "ArrowRight") {
+			this.rightPressed = true;
+		}
+		else if(e.key == "Left" || e.key == "ArrowLeft") {
+			this.leftPressed = true;
+		}
 	}
 
 	draw() {
 		this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
 
 		this.drawBall();
+		this.drawPaddle();
+		this.drawScore();
+		this.bricks.drawBricks();
+		// calculate next state, determine collusion and make changes if any
 		this.ballDelta();
+		this.paddleDelta();
 	}
 
 	ballDelta() {
@@ -72,13 +112,33 @@ export class CanvasComponent implements OnInit {
 		this.x = this.x + this.dx;
 
 		// do collusion detection for y
-		if (this.y + this.dy < this.ballRadius || this.y + this.dy > this.canvasElement.height - this.ballRadius) {
+		if (this.y + this.dy < this.ballRadius) {
 			this.dy = -this.dy;
+		} else if (this.y + this.dy > this.canvasElement.height - this.ballRadius) {
+			if(this.x > this.paddleX && this.x < this.paddleX + this.paddleWidth) {
+				this.dy = -this.dy;
+				this.increaseScore();
+			} else {
+				this.drawEnd();
+				this.gameOver = true;
+				clearInterval(this.gameLoop); // Needed for Chrome to end game
+			}
+			
 		}
 
 		if (this.x + this.dx > this.canvasElement.width - this.ballRadius || this.x + this.dx < this.ballRadius) {
 			this.dx = -this.dx;
 		}
+	}
+
+	handleRestart(){
+		console.log('restarting!');
+		this.gameOver = false;
+		this.gameLoop = this.startGame();
+	}
+
+	increaseScore(amount = 1){
+		this.score += amount;
 	}
 
 	drawBall() {
@@ -95,6 +155,28 @@ export class CanvasComponent implements OnInit {
 		this.ctx.fillStyle = "#0095DD";
 		this.ctx.fill();
 		this.ctx.closePath();
+	}
+
+	paddleDelta(){
+		if(this.rightPressed && this.paddleX < this.canvasElement.width - this.paddleWidth) {
+			console.log('move right');
+			this.paddleX += 7;
+		}
+		else if(this.leftPressed && this.paddleX > 0) {
+			console.log('move left');
+			this.paddleX -= 7;
+		}
+
+	}
+
+	drawScore(){
+		this.ctx.font = "16px Arial";
+		this.ctx.fillText(`Score: ${this.score}`, this.canvasElement.width - 70, 20);
+	}
+
+	drawEnd(){
+		this.ctx.font = "16px Arial";
+		this.ctx.fillText(`GAME OVER`, this.canvasElement.width * .40, this.canvasElement.height/2);
 	}
 
 	get canvasElement() {

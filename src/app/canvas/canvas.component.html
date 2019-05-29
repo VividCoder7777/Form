@@ -1,3 +1,8 @@
 <h4>Welcome to the Canvas game</h4>
-
-<canvas #myCanvas width="480" height="320" style="border: 1px solid red;"></canvas>
+<div class='center'>
+    <canvas #myCanvas width="480" height="600" style="border: 1px solid red;"></canvas>
+    <div>
+        <button *ngIf='gameOver' (click)='handleRestart()'>Restart</button>    
+    </div>
+    
+</div>
