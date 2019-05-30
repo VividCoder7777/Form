@@ -13,6 +13,7 @@ import { AnimateChildrenComponent } from './animate-children/animate-children.co
 import { GalleryComponent } from './gallery/gallery.component';
 import { CanvasComponent } from './canvas/canvas.component';
 import { PaddleComponent } from './paddle/paddle.component';
+import { StorefrontComponent } from './storefront/storefront.component';
 
 @NgModule({
 	declarations: [
@@ -24,7 +25,8 @@ import { PaddleComponent } from './paddle/paddle.component';
 		AnimateChildrenComponent,
 		GalleryComponent,
 		CanvasComponent,
-		PaddleComponent
+		PaddleComponent,
+		StorefrontComponent
 	],
 	imports: [ BrowserModule, AppRoutingModule, BrowserAnimationsModule, InViewportModule ],
 	providers: [],
