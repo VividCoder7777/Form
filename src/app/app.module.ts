@@ -14,6 +14,7 @@ import { GalleryComponent } from './gallery/gallery.component';
 import { CanvasComponent } from './canvas/canvas.component';
 import { PaddleComponent } from './paddle/paddle.component';
 import { StorefrontComponent } from './storefront/storefront.component';
+import { CarouselComponent } from './carousel/carousel.component';
 
 @NgModule({
 	declarations: [
@@ -26,7 +27,8 @@ import { StorefrontComponent } from './storefront/storefront.component';
 		GalleryComponent,
 		CanvasComponent,
 		PaddleComponent,
-		StorefrontComponent
+		StorefrontComponent,
+		CarouselComponent
 	],
 	imports: [ BrowserModule, AppRoutingModule, BrowserAnimationsModule, InViewportModule ],
 	providers: [],
